@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReplyRight — AI Google Review Responder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- LANDING PAGE -->
+  <div id="landing">
+    <nav>
+      <div class="logo">ReplyRight</div>
+      <div class="nav-right">
+        <a href="#" onclick="showPage('login')">Log in</a>
+        <button onclick="showPage('signup')">Start free trial</button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>Respond to every Google review<br>in seconds</h1>
+      <p>ReplyRight writes natural, personal responses to your Google reviews. More replies means higher Google ranking, which means more customers finding you.</p>
+      <button class="btn-big" onclick="showPage('signup')">Start your 14-day free trial</button>
+      <div class="small-note">No credit card required. Cancel anytime.</div>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><div class="num">89%</div><div class="lbl">of customers read replies before visiting</div></div>
+      <div class="stat"><div class="num">4x</div><div class="lbl">more likely to choose businesses that respond</div></div>
+      <div class="stat"><div class="num">8 sec</div><div class="lbl">average time to generate a response</div></div>
+    </section>
+
+    <section class="how">
+      <div class="section-label">How it works</div>
+      <h2>Three steps, done.</h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><strong>Paste the review</strong><p>Copy any Google review and paste it in. Pick the star rating and your tone.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><strong>AI writes a personal response</strong><p>ReplyRight reads the review and writes a response that actually addresses it, not a generic template.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><strong>Copy and paste to Google</strong><p>One click copies the response. Paste it into Google Business Profile. Done in under 30 seconds.</p></div></div>
+      </div>
+    </section>
+
+    <section class="pricing">
+      <div class="section-label">Pricing</div>
+      <h2>Simple, flat pricing</h2>
+      <div class="plans">
+        <div class="plan">
+          <div class="plan-name">Basic</div>
+          <div class="plan-price">$19<span>/mo</span></div>
+          <ul>
+            <li>Up to 30 responses per month</li>
+            <li>4 tone options</li>
+            <li>Email support</li>
+            <li>14-day free trial</li>
+          </ul>
+          <button onclick="showPage('signup')">Start free trial</button>
+        </div>
+        <div class="plan featured">
+          <div class="popular-badge">Most popular</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">$29<span>/mo</span></div>
+          <ul>
+            <li>Unlimited responses</li>
+            <li>4 tone options</li>
+            <li>Priority support</li>
+            <li>14-day free trial</li>
+          </ul>
+          <button onclick="showPage('signup')">Start free trial</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="logo">ReplyRight</div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="mailto:hello@replyright.io">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- SIGNUP PAGE -->
+  <div id="signup" class="auth-page" style="display:none;">
+    <div class="auth-card">
+      <div class="logo" onclick="showPage('landing')" style="cursor:pointer;margin-bottom:1.5rem;">ReplyRight</div>
+      <h2>Start your free trial</h2>
+      <p class="auth-sub">14 days free. No credit card needed.</p>
+      <input type="text" id="signup-name" placeholder="Your name" />
+      <input type="email" id="signup-email" placeholder="Email address" />
+      <input type="password" id="signup-password" placeholder="Create a password" />
+      <button onclick="handleSignup()">Create account</button>
+      <div class="auth-switch">Already have an account? <a href="#" onclick="showPage('login')">Log in</a></div>
+      <div class="auth-status" id="signup-status"></div>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="login" class="auth-page" style="display:none;">
+    <div class="auth-card">
+      <div class="logo" onclick="showPage('landing')" style="cursor:pointer;margin-bottom:1.5rem;">ReplyRight</div>
+      <h2>Welcome back</h2>
+      <p class="auth-sub">Log in to your account</p>
+      <input type="email" id="login-email" placeholder="Email address" />
+      <input type="password" id="login-password" placeholder="Password" />
+      <button onclick="handleLogin()">Log in</button>
+      <div class="auth-switch">No account? <a href="#" onclick="showPage('signup')">Start free trial</a></div>
+      <div class="auth-status" id="login-status"></div>
+    </div>
+  </div>
+
+  <!-- APP PAGE (logged in) -->
+  <div id="app" style="display:none;">
+    <nav>
+      <div class="logo">ReplyRight</div>
+      <div class="nav-right">
+        <span id="user-name-display"></span>
+        <button class="btn-outline" onclick="handleLogout()">Log out</button>
+      </div>
+    </nav>
+
+    <div class="app-wrap">
+      <div class="app-card">
+        <div class="section-title">Your business</div>
+        <div class="row2">
+          <div>
+            <label>Business name</label>
+            <input type="text" id="bizName" placeholder="e.g. Mario's Pizza" />
+          </div>
+          <div>
+            <label>Business type</label>
+            <select id="bizType">
+              <option value="restaurant">Restaurant</option>
+              <option value="dental practice">Dental practice</option>
+              <option value="gym">Gym</option>
+              <option value="hair salon">Hair salon</option>
+              <option value="plumber">Plumber</option>
+              <option value="accountant">Accountant</option>
+              <option value="real estate agency">Real estate agency</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="section-title">Star rating</div>
+        <div class="stars" id="stars">
+          <span class="star" data-val="1">★</span>
+          <span class="star" data-val="2">★</span>
+          <span class="star" data-val="3">★</span>
+          <span class="star" data-val="4">★</span>
+          <span class="star" data-val="5">★</span>
+        </div>
+
+        <label>Paste the review</label>
+        <textarea id="reviewText" placeholder="Paste the customer's Google review here..."></textarea>
+
+        <hr />
+
+        <div class="section-title">Tone</div>
+        <div class="tone-row">
+          <button class="tone-btn active" data-tone="warm and friendly">Warm</button>
+          <button class="tone-btn" data-tone="professional but approachable">Professional</button>
+          <button class="tone-btn" data-tone="genuinely apologetic and caring">Apologetic</button>
+          <button class="tone-btn" data-tone="laid-back and casual">Casual</button>
+        </div>
+
+        <button class="gen-btn" id="genBtn" onclick="generate()">Generate response</button>
+        <div class="status-txt" id="gen-status"></div>
+      </div>
+
+      <div class="app-card" id="resultCard" style="display:none;">
+        <div class="section-title">Your response</div>
+        <div class="result-box" id="resultText"></div>
+        <div class="result-actions">
+          <button onclick="copyText()">Copy to clipboard</button>
+          <button onclick="generate()">Regenerate</button>
+        </div>
+      </div>
+
+      <div class="app-card setup-card">
+        <div class="section-title">One-time setup</div>
+        <p style="font-size:13px;color:#666;margin-bottom:10px;">Paste your free Gemini API key to activate the tool. Get one free at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> — takes 2 minutes.</p>
+        <div style="display:flex;gap:8px;">
+          <input type="password" id="apiKey" placeholder="Paste Gemini API key..." style="flex:1;" />
+          <button onclick="saveKey()">Save</button>
+        </div>
+        <div class="status-txt" id="key-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
