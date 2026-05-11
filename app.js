@@ -8,9 +8,6 @@ function showPage(name) {
 }
 
 // ─── SIMPLE AUTH (localStorage) ─────────────────────────────
-// NOTE: This is a lightweight auth system for your MVP.
-// When you're ready to scale, swap this for Supabase (free).
-
 function handleSignup() {
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
@@ -46,7 +43,7 @@ function handleLogin() {
 
 function loginSuccess(name) {
   document.getElementById('user-name-display').textContent = name;
-  const savedKey = localStorage.getItem('rr_gemini_key');
+  const savedKey = localStorage.getItem('rr_groq_key');
   if (savedKey) document.getElementById('apiKey').value = savedKey;
   showPage('app');
 }
@@ -56,17 +53,15 @@ function handleLogout() {
   showPage('landing');
 }
 
-// Check if already logged in on page load
 window.addEventListener('DOMContentLoaded', () => {
   const session = JSON.parse(localStorage.getItem('rr_session') || 'null');
   if (session) {
     document.getElementById('user-name-display').textContent = session.name;
-    const savedKey = localStorage.getItem('rr_gemini_key');
+    const savedKey = localStorage.getItem('rr_groq_key');
     if (savedKey) document.getElementById('apiKey').value = savedKey;
     showPage('app');
   }
 
-  // Star rating
   document.querySelectorAll('.star').forEach(s => {
     s.addEventListener('click', () => {
       rating = parseInt(s.dataset.val);
@@ -74,7 +69,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Tone buttons
   document.querySelectorAll('.tone-btn').forEach(b => {
     b.addEventListener('click', () => {
       document.querySelectorAll('.tone-btn').forEach(x => x.classList.remove('active'));
@@ -88,7 +82,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function saveKey() {
   const key = document.getElementById('apiKey').value.trim();
   if (!key) { document.getElementById('key-status').textContent = 'Paste your API key first.'; return; }
-  localStorage.setItem('rr_gemini_key', key);
+  localStorage.setItem('rr_groq_key', key);
   document.getElementById('key-status').textContent = 'Key saved. Ready to generate responses.';
 }
 
@@ -97,8 +91,8 @@ let rating = 0;
 let tone = 'warm and friendly';
 
 async function generate() {
-  const key = localStorage.getItem('rr_gemini_key');
-  if (!key) { document.getElementById('gen-status').textContent = 'Save your Gemini API key first.'; return; }
+  const key = localStorage.getItem('rr_groq_key');
+  if (!key) { document.getElementById('gen-status').textContent = 'Save your Groq API key first.'; return; }
 
   const biz = document.getElementById('bizName').value.trim();
   const type = document.getElementById('bizType').value;
@@ -134,24 +128,33 @@ Rules:
 - Output only the response text, nothing else.`;
 
   try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      }
-    );
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 300,
+        temperature: 0.8
+      })
+    });
+
     const data = await res.json();
+
     if (data.error) {
       document.getElementById('gen-status').textContent = 'API error: ' + data.error.message;
       btn.disabled = false;
       btn.textContent = 'Generate response';
       return;
     }
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Something went wrong, try again.';
+
+    const text = data.choices?.[0]?.message?.content || 'Something went wrong, try again.';
     document.getElementById('resultText').textContent = text.trim();
     document.getElementById('resultCard').style.display = 'block';
+
   } catch (e) {
     document.getElementById('gen-status').textContent = 'Connection error. Check your API key and try again.';
   }
